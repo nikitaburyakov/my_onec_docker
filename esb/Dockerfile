@@ -24,8 +24,8 @@ RUN wget https://cdn.azul.com/zulu/bin/zulu17.60.17-ca-fx-jdk${JDKFX_VERSION}-li
     && apt install -y /tmp/zulu_jdk_fx.deb
 
 #INSTALL ESB
-ENV LANG="en_US.UTF-8"
-ENV LC_ALL="en_US.UTF-8"
+ENV LANG="ru_RU.UTF-8"
+ENV LC_ALL="ru_RU.UTF-8"
 
 
 #INSTALL OSCRIPT
