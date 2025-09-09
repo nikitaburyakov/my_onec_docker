@@ -18,40 +18,53 @@ RUN apt update \
 #     && localedef -i ru_RU -c -f UTF-8 -A /usr/share/locale/locale.alias ru_RU.UTF-8
 #
 
-ARG JDKFX_VERSION=17.0.16
-RUN wget https://cdn.azul.com/zulu/bin/zulu17.60.17-ca-fx-jdk${JDKFX_VERSION}-linux_amd64.deb \
-    && mv ./zulu17.60.17-ca-fx-jdk${JDKFX_VERSION}-linux_amd64.deb /tmp/zulu_jdk_fx.deb \
-    && apt install -y /tmp/zulu_jdk_fx.deb
+# ARG JDKFX_VERSION=17.0.16
+# RUN wget https://cdn.azul.com/zulu/bin/zulu17.60.17-ca-fx-jdk${JDKFX_VERSION}-linux_amd64.deb \
+#     && mv ./zulu17.60.17-ca-fx-jdk${JDKFX_VERSION}-linux_amd64.deb /tmp/zulu_jdk_fx.deb \
+#     && apt install -y /tmp/zulu_jdk_fx.deb
 
 #INSTALL ESB
-ENV LANG="ru_RU.UTF-8"
-ENV LC_ALL="ru_RU.UTF-8"
+ENV LANG ru_RU.UTF-8
+ENV LANGUAGE ru_RU.UTF-8
+ENV LC_ALL ru_RU.UTF-8
 
+COPY ./esb /tmp/esb
+
+# RUN export LANG=ru_RU.UTF-8 \
+#     && export  LC_ALL=ru_RU.UTF-8 
+#RUN echo $LANG
+
+RUN /tmp/esb/1ce-installer-cli install --disable-service-creation
+    # export LANG=ru_RU.UTF-8 \
+    # && export  LC_ALL=ru_RU.UTF-8 \
+    # && chmod +x /tmp/esb/1ce-installer-cli \
+    # && 
+    
 
 #INSTALL OSCRIPT
-ARG OVM_REPOSITORY_OWNER=oscript-library
-ARG OVM_VERSION=v1.6.2
-ARG ONESCRIPT_VERSION=stable
-ARG ONESCRIPT_PACKAGES="yard"
+# ARG OVM_REPOSITORY_OWNER=oscript-library
+# ARG OVM_VERSION=v1.6.2
+# ARG ONESCRIPT_VERSION=stable
+# ARG ONESCRIPT_PACKAGES="yard"
 
-RUN DEBIAN_FRONTEND=noninteractive apt-get install --no-install-recommends -y \
-        mono-runtime \
-        ca-certificates-mono \
-        libmono-i18n4.0-all \
-        libmono-system-runtime-serialization4.0-cil
+# RUN DEBIAN_FRONTEND=noninteractive apt-get install --no-install-recommends -y \
+#         mono-runtime \
+#         ca-certificates-mono \
+#         libmono-i18n4.0-all \
+#         libmono-system-runtime-serialization4.0-cil
     
-RUN wget https://github.com/${OVM_REPOSITORY_OWNER}/ovm/releases/download/${OVM_VERSION}/ovm.exe \
-  && mv ovm.exe /usr/local/bin/ \
-  && echo 'mono /usr/local/bin/ovm.exe "$@"' | tee /usr/local/bin/ovm \
-  && chmod +x /usr/local/bin/ovm \
-  && ovm use --install ${ONESCRIPT_VERSION}
+# RUN wget https://github.com/${OVM_REPOSITORY_OWNER}/ovm/releases/download/${OVM_VERSION}/ovm.exe \
+#   && mv ovm.exe /usr/local/bin/ \
+#   && echo 'mono /usr/local/bin/ovm.exe "$@"' | tee /usr/local/bin/ovm \
+#   && chmod +x /usr/local/bin/ovm \
+#   && ovm use --install ${ONESCRIPT_VERSION}
   
-ENV OSCRIPTBIN=/root/.local/share/ovm/current/bin
-ENV PATH="$OSCRIPTBIN:$PATH"
+# ENV OSCRIPTBIN=/root/.local/share/ovm/current/bin
+# ENV PATH="$OSCRIPTBIN:$PATH"
 
-RUN opm install opm \
-  && opm update --all \
-  && opm install ${ONESCRIPT_PACKAGES} 
+# RUN opm install opm \
+#   && opm update --all \
+#   && opm install ${ONESCRIPT_PACKAGES} 
 
     # install postgresql
     #ARG POSTGRESQL_VERSION=15
