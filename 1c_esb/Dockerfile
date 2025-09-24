@@ -11,6 +11,8 @@ COPY ./entrypoint.sh /tmp/entrypoint.sh
 ENV LANG="ru_RU.UTF-8"
 ENV LC_ALL="ru_RU.UTF-8"
 
+ENV ESBDIR=/opt/esb
+
 RUN apt update \
     && apt install -y \
             locales \
@@ -20,7 +22,8 @@ RUN apt update \
     && echo "export LC_ALL=ru_RU.UTF-8" >> ~/.bashrc \
     && echo "export LANG=ru_RU.UTF-8" >> ~/.bashrc \
     && echo "export LANGUAGE=ru_RU.UTF-8" >> ~/.bashrc \
-    && /tmp/esb/1ce-installer-cli install --disable-service-creation \
-    && chmod +x /tmp/entrypoint.sh
-    
+    && mkdir -p /opt/esb \
+    && /tmp/esb/1ce-installer-cli install --products-home ${ESBDIR} --disable-service-creation \
+    && chmod +x /tmp/entrypoint.sh 
+
 ENTRYPOINT ["/tmp/entrypoint.sh"]

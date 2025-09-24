@@ -1,10 +1,7 @@
-
 networks:
   onec_esb:
     external: false
 
-
-  
 services:
   server:
     image: onec_esb:latest
@@ -13,7 +10,7 @@ services:
     networks:
       - onec_esb
     volumes:
-      - onec_esb_config:/var/opt/1C/1CE/instances/1c-enterprise-esb-with-ide/config 
+      - 1c_esb_instance:/var/opt/1C/1CE/instances/1c-enterprise-esb-with-ide
     ports:
       - "9099:9090"
     depends_on:
@@ -21,6 +18,7 @@ services:
 
   db:
     image: docker.io/library/postgres:15
+    container_name: onec_esb_db
     restart: always
     environment:
       - POSTGRES_USER=admin
@@ -32,4 +30,4 @@ services:
       - ./postgres:/var/lib/postgresql/data
 
 volumes:
-  onec_esb_config:  
+  1c_esb_instance:
